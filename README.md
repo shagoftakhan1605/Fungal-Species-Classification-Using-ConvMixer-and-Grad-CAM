@@ -39,7 +39,9 @@ This project proposes a novel deep learning pipeline based on the **ConvMixer** 
 
 ---
 
-## **Dataset**
+## **Dataset** 
+Dataset: (https://www.kaggle.com/datasets/joebeachcapital/defungi/data)
+
 The **DeFungi** dataset, curated for this study, consists of 9,114 high-resolution microscopic image patches labeled into five fungal species:
 1. **Tortuous Septate Hyaline Hyphae (TSH):** Morphologically characterized by tortuous, septate, and hyaline hyphae.
 2. **Beaded Arthroconidial Septate Hyaline Hyphae (BASH):** Beaded, segmented structures with clear septations.
