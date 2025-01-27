@@ -3,6 +3,11 @@
 ## **Overview**
 This repository presents a state-of-the-art deep learning pipeline designed to classify fungal species using high-resolution microscopic images. Leveraging the **ConvMixer** architecture and **Gradient-weighted Class Activation Mapping (Grad-CAM)** for interpretability, this work addresses key challenges in fungal classification, including overlapping morphologies, noisy datasets, and the lack of scalable, explainable models. This pipeline is a step toward advancing fungal diagnostics in clinical, agricultural, and ecological contexts.
 
+## **Outputs**
+![3](https://github.com/user-attachments/assets/12419343-8042-4c11-be4f-f24e307c10fe)
+![4](https://github.com/user-attachments/assets/357e27ca-9722-4951-95fe-1342b0c89841)
+
+
 ---
 
 ## **Table of Contents**
