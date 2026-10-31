@@ -1,7 +1,7 @@
 # **Fungal Species Classification Using ConvMixer and Grad-CAM**
 
 ## **Overview**
-This repository presents a state-of-the-art deep learning pipeline designed to classify fungal species using high-resolution microscopic images. Leveraging the **ConvMixer** architecture and **Gradient-weighted Class Activation Mapping (Grad-CAM)** for interpretability, this work addresses key challenges in fungal classification, including overlapping morphologies, noisy datasets, and the lack of scalable, explainable models. This pipeline is a step toward advancing fungal diagnostics in clinical, agricultural, and ecological contexts.
+This repository presents a deep learning pipeline designed to classify fungal species using high-resolution microscopic images. Leveraging the **ConvMixer** architecture and **Gradient-weighted Class Activation Mapping (Grad-CAM)** for interpretability, this work addresses key challenges in fungal classification, including overlapping morphologies, noisy datasets, and the lack of scalable, explainable models. This pipeline is a step toward advancing fungal diagnostics in clinical, agricultural, and ecological contexts.
 
 ## **Outputs**
 ![3](https://github.com/user-attachments/assets/12419343-8042-4c11-be4f-f24e307c10fe)
@@ -15,7 +15,6 @@ This repository presents a state-of-the-art deep learning pipeline designed to c
 2. [Dataset](#dataset)
 3. [Methodology](#methodology)
     - [ConvMixer Architecture](#convmixer-architecture)
-    - [Preprocessing Pipeline](#preprocessing-pipeline)
     - [Model Interpretability](#model-interpretability)
 4. [Experimental Results](#experimental-results)
     - [Performance Metrics](#performance-metrics)
@@ -37,17 +36,17 @@ Fungal species classification is a critical task in domains such as clinical dia
 - **Dataset limitations**, such as noisy images and a lack of diversity in labeled datasets.
 - **Interpretability issues** that hinder trust and adoption of AI-driven tools.
 
-This project proposes a novel deep learning pipeline based on the **ConvMixer** architecture, fine-tuned for fungal classification. The pipeline addresses these challenges with:
-- A robust preprocessing pipeline tailored for fungal microscopy images.
-- The integration of **Grad-CAM** for visualizing model decision-making.
-- Comprehensive evaluations of accuracy, precision, recall, F1-score, and computational efficiency.
+This project applies the **ConvMixer** architecture, trained from scratch, to fungal classification. It includes:
+- A simple preprocessing step (resizing and normalisation).
+- **Grad-CAM** for visualising model decision-making.
+- Evaluation with accuracy, precision, recall, F1-score and top-2 accuracy, using K-fold cross-validation.
 
 ---
 
 ## **Dataset** 
 Dataset: (https://www.kaggle.com/datasets/joebeachcapital/defungi/data)
 
-The **DeFungi** dataset, curated for this study, consists of 9,114 high-resolution microscopic image patches labeled into five fungal species:
+The public **DeFungi** dataset (not collected by me) consists of 9,114 high-resolution microscopic image patches labeled into five fungal species:
 1. **Tortuous Septate Hyaline Hyphae (TSH):** Morphologically characterized by tortuous, septate, and hyaline hyphae.
 2. **Beaded Arthroconidial Septate Hyaline Hyphae (BASH):** Beaded, segmented structures with clear septations.
 3. **Groups or Mosaics of Arthroconidia (GMA):** Unique group formations of arthroconidia in mosaic patterns.
@@ -62,10 +61,8 @@ The **DeFungi** dataset, curated for this study, consists of 9,114 high-resoluti
 
 
 ### **Preprocessing**
-The dataset underwent extensive preprocessing:
-- **Noise Reduction:** Applied median filtering to remove background noise.
-- **Artifact Removal:** Used morphological thinning and adaptive thresholding to enhance fungal structures.
-- **Standardization:** Resized images to \( 32 \times 32 \) pixels while retaining structural details.
+- **Resizing:** images resized to \( 32 \times 32 \) pixels.
+- **Normalisation:** pixel values scaled to \( [0, 1] \).
 
 ---
 
@@ -76,30 +73,27 @@ The ConvMixer architecture was selected for its ability to efficiently extract h
 - **Pointwise Convolutions:** For feature projection and dimensionality reduction.
 - **Skip Connections:** To mitigate gradient vanishing and enable efficient training.
 
-The network was fine-tuned on the DeFungi dataset, with the lower layers frozen initially to preserve pre-trained ImageNet features, followed by joint optimization of all layers.
-
-### **Preprocessing Pipeline**
-- **Contrast Enhancement:** Used adaptive histogram equalization to highlight fungal morphological features.
-- **Patch Extraction:** Divided larger images into \( 500 \times 500 \) pixel patches for consistent input to the model.
-- **Normalization:** Scaled pixel values to a \( [0, 1] \) range for faster convergence.
+The network was trained from scratch on the DeFungi dataset (no ImageNet pre-training), using AdamW (learning rate 1e-4, weight decay 1e-4), batch size 128 and 15 epochs per fold, with K-fold cross-validation.
 
 ### **Model Interpretability**
-Grad-CAM was integrated into the pipeline to generate heatmaps highlighting regions most influential in the model's predictions. These visualizations were validated against expert annotations, demonstrating alignment with biologically relevant fungal features, such as hyphal branching and spore arrangements.
+Grad-CAM was integrated into the pipeline to generate heatmaps highlighting regions most influential in the model's predictions. These heatmaps were inspected visually. They were not compared against expert annotations.
 
 ---
 
 ## **Experimental Results**
 ### **Performance Metrics**
-The ConvMixer model achieved the following:
-- **Accuracy:** \( 85\% \)
-- **Precision:** \( 87\% \)
-- **Recall:** \( 85\% \)
-- **F1-Score:** \( 85\% \)
-- **AUC-ROC:** \( 0.95 \)
+Results on the held-out test set of the final fold (1,822 images), taken from the notebook outputs:
+- **Accuracy:** 85%
+- **Precision:** 86% (macro), 85% (weighted)
+- **Recall:** 84% (macro), 85% (weighted)
+- **F1-score:** 85% (macro and weighted)
+- **Top-2 accuracy:** 95.1%
+
+Per-fold test accuracy ranged from 69.2% to 85.1%.
 
 ### **Grad-CAM Insights**
-- Heatmaps confirmed the model’s focus on key fungal structures, including septations, spore arrangements, and pigmentation patterns.
-- The visual explanations significantly improved trust and interpretability, aligning well with expert assessments.
+- In the examples inspected, heatmaps often highlighted visible fungal structures.
+- This is a qualitative observation only. A formal check against expert annotations would be needed to confirm it.
 
 ---
 
@@ -140,10 +134,10 @@ Evaluate the trained model on the test dataset:
 ---
 
 ## **Acknowledgments**
-This research was supported by contributions from domain experts in mycology and computational biology. The dataset was generously provided by the DeFungi initiative, with preprocessing techniques informed by best practices in fungal microscopy.
+The DeFungi dataset is publicly available on Kaggle at the link above. Please cite its original authors if you use it.
 
 ---
 
 ## **License**
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+The code in this repository is licensed under the MIT License. See the [LICENSE](LICENSE) file for details. The MIT License covers the code only, not the DeFungi images.
 
